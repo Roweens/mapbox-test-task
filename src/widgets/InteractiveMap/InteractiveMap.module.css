@@ -1,0 +1,25 @@
+.interactiveMapContainer {
+    position: relative;
+    height: 100vh;
+}
+
+.interactiveMapControls {
+    position: absolute;
+    display: flex;
+    gap: 30px;
+    top: 20px;
+    left: 20px;
+}
+
+.loaderContainer {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(152, 207, 195, 0.85);
+}

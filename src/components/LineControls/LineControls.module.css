@@ -1,0 +1,19 @@
+.activeButton {
+    background-color: cadetblue;
+    color: white;
+}
+
+.linePoint {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: red;
+    cursor: pointer;
+}
+
+.mapButtonsGroup {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    gap: 10px;
+}
