@@ -1,31 +1,34 @@
 import { observer } from 'mobx-react-lite';
-import styles from './LineControls.module.css';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { EventData, LngLat, Map, Popup } from 'mapbox-gl';
 import { v4 as uuidv4 } from 'uuid';
+import { DrawMode } from '../../../store/types';
+import { getDateDDMMYYYY } from '../../../lib/utils/getDate';
 
 interface LineControlsProps {
-    map: mapboxgl.Map | null;
+    map: Map | null;
     lines: string[];
+    mode?: DrawMode;
     addLine: (newLine: string) => void;
     cleanLines: () => void;
+    setDrawMode: (newMode: DrawMode) => void;
 }
 
 export const LineControls = observer((props: LineControlsProps) => {
-    const { map, lines, cleanLines, addLine } = props;
+    const { map, lines, mode, cleanLines, addLine, setDrawMode } = props;
 
-    const [isLineMode, setIsLineMode] = useState<boolean>(false);
+    const isLineMode = useMemo(() => mode === 'line', [mode]);
     const [isLinesHidden, setIsLinesHidden] = useState<boolean>(false);
     const [selectedCoordinates, setSelectedCoordinates] = useState<[number, number][]>([]);
     const layerIdRef = useRef<string>();
 
     const drawLinePointsHandler = useCallback(
-        (event: mapboxgl.EventData) => {
+        (event: EventData) => {
             if (!layerIdRef.current) {
                 layerIdRef.current = uuidv4();
             }
 
-            const coordinates: mapboxgl.LngLat = event.lngLat;
+            const coordinates: LngLat = event.lngLat;
 
             setSelectedCoordinates([...selectedCoordinates, [coordinates.lng, coordinates.lat]]);
 
@@ -40,7 +43,7 @@ export const LineControls = observer((props: LineControlsProps) => {
                 data: {
                     type: 'Feature',
                     properties: {
-                        description: new Date(Date.now()).toLocaleString().split(',')[0],
+                        description: getDateDDMMYYYY(),
                     },
                     geometry: {
                         type: 'LineString',
@@ -68,7 +71,7 @@ export const LineControls = observer((props: LineControlsProps) => {
 
     const drawLineHandler = useCallback(() => {
         map?.off('click', drawLinePointsHandler);
-        setIsLineMode(false);
+        setDrawMode(null);
         if (layerIdRef.current) {
             addLine(layerIdRef.current as string);
 
@@ -80,21 +83,23 @@ export const LineControls = observer((props: LineControlsProps) => {
                     coordinates.lng += e.lngLat.lng > coordinates.lng ? 360 : -360;
                 }
 
-                new mapboxgl.Popup().setLngLat(coordinates).setHTML(description).addTo(map);
+                new Popup().setLngLat(coordinates).setHTML(description).addTo(map);
             });
         }
 
         layerIdRef.current = undefined;
         setSelectedCoordinates([]);
-    }, [addLine, drawLinePointsHandler, map]);
+    }, [addLine, drawLinePointsHandler, map, setDrawMode]);
 
     useEffect(() => {
         if (isLineMode) {
+            console.log('line mode on');
             map?.on('click', drawLinePointsHandler);
             map?.on('dblclick', drawLineHandler);
 
             return;
         }
+        console.log('line mode off');
         map?.off('click', drawLinePointsHandler);
         map?.off('dblclick', drawLineHandler);
 
@@ -105,8 +110,8 @@ export const LineControls = observer((props: LineControlsProps) => {
     }, [drawLineHandler, drawLinePointsHandler, isLineMode, map]);
 
     const onAddLineButtonHandle = useCallback(() => {
-        setIsLineMode(true);
-    }, []);
+        setDrawMode('line');
+    }, [setDrawMode]);
 
     const onLineControlsHandle = useCallback(
         (action: 'hide' | 'delete') => () => {
@@ -132,17 +137,17 @@ export const LineControls = observer((props: LineControlsProps) => {
     );
 
     return (
-        <div className={styles.lineControls}>
+        <div>
             <button
                 type="button"
                 onClick={onAddLineButtonHandle}
-                className={isLineMode ? styles.activeButton : undefined}
+                className={isLineMode ? 'activeButton' : undefined}
             >
                 Add Line mode: {isLineMode ? 'on' : 'off'}
             </button>
 
             {lines?.length ? (
-                <div className={styles.mapButtonsGroup}>
+                <div className="mapButtonsGroup">
                     <button type="button" onClick={onLineControlsHandle('delete')}>
                         Delete lines
                     </button>
