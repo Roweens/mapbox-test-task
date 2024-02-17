@@ -1,4 +1,4 @@
-## [Ссылка на деплой Vercel](mapbox-test-task.vercel.app)
+## [Ссылка на деплой Vercel](https://mapbox-test-task.vercel.app/)
 
 Запуск проекта локально - `npm start`
 
