@@ -11,6 +11,7 @@ button {
     box-shadow: 6px 3px 10px gray;
     border-radius: 10px;
     outline: 1px solid cadetblue;
+    font-size: 18px;
 }
 
 .mapboxgl-popup-content button {
