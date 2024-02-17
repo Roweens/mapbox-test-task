@@ -21,7 +21,7 @@ export const useMarkerControls = (params: MarkerControlsParams) => {
     const addMarkerHandle = useCallback(
         (event: EventData) => {
             let marker = new Marker();
-            let popup = new Popup().setText(getDateDDMMYYYY());
+            let popup = new Popup().setText(`Дата создания: ${getDateDDMMYYYY()}`);
 
             if (map) {
                 marker.setLngLat(event.lngLat).setPopup(popup).addTo(map);
@@ -45,9 +45,9 @@ export const useMarkerControls = (params: MarkerControlsParams) => {
         };
     }, [addMarkerHandle, isMarkerMode, map]);
 
-    const onAddMarkerButtonHandle = useCallback(() => {
+    const onAddMarkerButtonHandle = () => {
         setDrawMode('marker');
-    }, [setDrawMode]);
+    };
 
     const onMarkerControlsHandle = useCallback(
         (action: 'hide' | 'delete') => () => {

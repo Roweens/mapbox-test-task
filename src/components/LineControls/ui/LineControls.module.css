@@ -1,0 +1,6 @@
+.customMarker {
+    width: 15px;
+    height: 15px;
+    background-color: orange;
+    border-radius: 50%;
+}
