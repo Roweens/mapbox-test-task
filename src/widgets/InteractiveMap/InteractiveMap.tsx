@@ -1,5 +1,5 @@
 import { observer } from 'mobx-react-lite';
-import { MapComponent } from '../../components/MapBoxMap/Map';
+import { MapBoxMap } from '../../components/MapBoxMap/MapBoxMap';
 import { MapBoxMapModel } from '../../store/MapBoxMapModel';
 import { MarkerControls } from '../../components/MarkerControls/ui/MarkerControls';
 import { LineControls } from '../../components/LineControls/ui/LineControls';
@@ -8,7 +8,7 @@ import { useCallback } from 'react';
 import { Map } from 'mapbox-gl';
 import { Loader } from '../../components/Loader/Loader';
 
-const MapBoxMap = new MapBoxMapModel();
+const MapBoxMapStore = new MapBoxMapModel();
 
 export const InteractiveMap = observer(() => {
     const {
@@ -24,7 +24,7 @@ export const InteractiveMap = observer(() => {
         cleanMarkers,
         setIsLoading,
         setDrawMode,
-    } = MapBoxMap;
+    } = MapBoxMapStore;
 
     const onMapLoadHandler = useCallback(
         (map: Map) => {
@@ -36,7 +36,7 @@ export const InteractiveMap = observer(() => {
 
     return (
         <div className={styles.interactiveMapContainer}>
-            <MapComponent onLoaded={onMapLoadHandler} />
+            <MapBoxMap onLoaded={onMapLoadHandler} />
             <div className={styles.interactiveMapControls}>
                 <MarkerControls
                     map={map}

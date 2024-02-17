@@ -1,16 +1,16 @@
 import { useRef, useEffect, useState, memo } from 'react';
 import mapboxgl, { Map } from 'mapbox-gl';
-import styles from './Map.module.css';
+import styles from './MapBoxMap.module.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-interface MapProps {
+interface MapBoxMapProps {
     initialOptions?: Omit<mapboxgl.MapboxOptions, 'container'>;
     onCreated?(map: mapboxgl.Map): void;
     onLoaded?(map: mapboxgl.Map): void;
     onRemoved?(): void;
 }
 
-export const MapComponent = memo((props: MapProps) => {
+export const MapBoxMap = memo((props: MapBoxMapProps) => {
     const { initialOptions, onCreated, onLoaded, onRemoved } = props;
 
     const [map, setMap] = useState<Map>();
