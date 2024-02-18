@@ -1,50 +1,29 @@
+import MapBoxMapStore from '../../../store/MapBoxMapModel';
 import { observer } from 'mobx-react-lite';
-import { Map, Marker } from 'mapbox-gl';
-import { DrawMode } from '../../../store/types';
 import { useMarkerControls } from '../lib/useMarkerControls';
+import { DrawControls } from '../../DrawControls/DrawControls';
 
-interface MarkerControlsProps {
-    map: Map | null;
-    markers: Marker[];
-    mode?: DrawMode;
-    addMarker: (newMarker: Marker) => void;
-    cleanMarkers: () => void;
-    setDrawMode: (newMode: DrawMode) => void;
-}
-
-export const MarkerControls = observer((props: MarkerControlsProps) => {
-    const { map, markers, mode, addMarker, cleanMarkers, setDrawMode } = props;
+export const MarkerControls = observer(() => {
+    const { map, markers, drawMode, addMarker, cleanMarkers, setDrawMode } = MapBoxMapStore;
 
     const { isMarkerMode, isMarkersHidden, onAddMarkerButtonHandle, onMarkerControlsHandle } =
         useMarkerControls({
             map,
             markers,
-            mode,
+            mode: drawMode,
             addMarker,
             cleanMarkers,
             setDrawMode,
         });
 
     return (
-        <div>
-            <button
-                type="button"
-                onClick={onAddMarkerButtonHandle}
-                className={isMarkerMode ? 'activeButton' : undefined}
-            >
-                Add marker mode: {isMarkerMode ? 'on' : 'off'}
-            </button>
-
-            {!!markers?.length && (
-                <div className="mapButtonsGroup">
-                    <button type="button" onClick={onMarkerControlsHandle('delete')}>
-                        Delete markers
-                    </button>
-                    <button type="button" onClick={onMarkerControlsHandle('hide')}>
-                        {isMarkersHidden ? 'Show' : 'Hide'} markers
-                    </button>
-                </div>
-            )}
-        </div>
+        <DrawControls
+            drawingLabel="marker"
+            drawings={markers}
+            isDrawMode={isMarkerMode}
+            isHidden={isMarkersHidden}
+            onStartDraw={onAddMarkerButtonHandle}
+            onDrawControl={onMarkerControlsHandle}
+        />
     );
 });

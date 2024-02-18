@@ -1,0 +1,12 @@
+.activeButton {
+    background-color: cadetblue;
+    color: white;
+    outline: 1px solid white;
+}
+
+.mapButtonsGroup {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    gap: 10px;
+}

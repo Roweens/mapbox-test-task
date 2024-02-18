@@ -1,30 +1,15 @@
+import MapBoxMapStore from '../../store/MapBoxMapModel';
+import styles from './InteractiveMap.module.css';
 import { observer } from 'mobx-react-lite';
 import { MapBoxMap } from '../../components/MapBoxMap/MapBoxMap';
-import { MapBoxMapModel } from '../../store/MapBoxMapModel';
 import { MarkerControls } from '../../components/MarkerControls/ui/MarkerControls';
 import { LineControls } from '../../components/LineControls/ui/LineControls';
-import styles from './InteractiveMap.module.css';
 import { useCallback } from 'react';
 import { Map } from 'mapbox-gl';
 import { Loader } from '../../components/Loader/Loader';
 
-const MapBoxMapStore = new MapBoxMapModel();
-
 export const InteractiveMap = observer(() => {
-    const {
-        map,
-        markers,
-        lines,
-        isLoading,
-        drawMode,
-        setMap,
-        addMarker,
-        addLine,
-        cleanLines,
-        cleanMarkers,
-        setIsLoading,
-        setDrawMode,
-    } = MapBoxMapStore;
+    const { isLoading, setIsLoading, setMap } = MapBoxMapStore;
 
     const onMapLoadHandler = useCallback(
         (map: Map) => {
@@ -38,22 +23,8 @@ export const InteractiveMap = observer(() => {
         <div className={styles.interactiveMapContainer}>
             <MapBoxMap onLoaded={onMapLoadHandler} />
             <div className={styles.interactiveMapControls}>
-                <MarkerControls
-                    map={map}
-                    markers={markers}
-                    mode={drawMode}
-                    addMarker={addMarker}
-                    cleanMarkers={cleanMarkers}
-                    setDrawMode={setDrawMode}
-                />
-                <LineControls
-                    map={map}
-                    lines={lines}
-                    mode={drawMode}
-                    addLine={addLine}
-                    cleanLines={cleanLines}
-                    setDrawMode={setDrawMode}
-                />
+                <MarkerControls />
+                <LineControls />
             </div>
             {isLoading && <Loader className={styles.loaderContainer} />}
         </div>

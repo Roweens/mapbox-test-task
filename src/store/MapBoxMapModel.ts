@@ -2,7 +2,7 @@ import mapboxgl from 'mapbox-gl';
 import { makeAutoObservable } from 'mobx';
 import { DrawMode } from './types';
 
-export class MapBoxMapModel {
+class MapBoxMapModel {
     map: mapboxgl.Map | null = null;
     lines: string[] = [];
     markers: mapboxgl.Marker[] = [];

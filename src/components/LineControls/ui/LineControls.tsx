@@ -1,50 +1,29 @@
+import MapBoxMapStore from '../../../store/MapBoxMapModel';
 import { observer } from 'mobx-react-lite';
-import { Map } from 'mapbox-gl';
-import { DrawMode } from '../../../store/types';
 import { useLineControls } from '../lib/useLineControls';
+import { DrawControls } from '../../DrawControls/DrawControls';
 
-interface LineControlsProps {
-    map: Map | null;
-    lines: string[];
-    mode?: DrawMode;
-    addLine: (newLine: string) => void;
-    cleanLines: () => void;
-    setDrawMode: (newMode: DrawMode) => void;
-}
-
-export const LineControls = observer((props: LineControlsProps) => {
-    const { map, lines, mode, cleanLines, addLine, setDrawMode } = props;
+export const LineControls = observer(() => {
+    const { map, lines, drawMode, setDrawMode, addLine, cleanLines } = MapBoxMapStore;
 
     const { isLineMode, isLinesHidden, onAddLineButtonHandle, onLineControlsHandle } =
         useLineControls({
             lines,
             map,
-            mode,
+            mode: drawMode,
             addLine,
             cleanLines,
             setDrawMode,
         });
 
     return (
-        <div>
-            <button
-                type="button"
-                onClick={onAddLineButtonHandle}
-                className={isLineMode ? 'activeButton' : undefined}
-            >
-                Add Line mode: {isLineMode ? 'on' : 'off'}
-            </button>
-
-            {lines?.length ? (
-                <div className="mapButtonsGroup">
-                    <button type="button" onClick={onLineControlsHandle('delete')}>
-                        Delete lines
-                    </button>
-                    <button type="button" onClick={onLineControlsHandle('hide')}>
-                        {isLinesHidden ? 'Show' : 'Hide'} lines
-                    </button>
-                </div>
-            ) : null}
-        </div>
+        <DrawControls
+            drawingLabel="line"
+            drawings={lines}
+            isDrawMode={isLineMode}
+            isHidden={isLinesHidden}
+            onStartDraw={onAddLineButtonHandle}
+            onDrawControl={onLineControlsHandle}
+        />
     );
 });
